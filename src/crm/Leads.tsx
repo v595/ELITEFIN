@@ -12,7 +12,7 @@ import { getLeads } from "../utils/storage";
 import { exportLeadsToExcel } from "../utils/excel";
 import { formatCurrency } from "../utils/calculations";
 import { getWhatsAppLink } from "../utils/whatsapp";
-import type { Lead, LeadStatus, CustomerQuality, CarType } from "../types";
+import type { Lead, LeadStatus, CustomerQuality } from "../types";
 
 const STATUS_OPTIONS: LeadStatus[] = [
   "New", "Contacted", "Interested", "Documents Pending", "Application In Progress",
