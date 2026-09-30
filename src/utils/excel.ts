@@ -85,6 +85,16 @@ const VALID_STATUSES: LeadStatus[] = [
   "Approved", "Disbursed", "Follow-Up", "Not Interested", "Not Eligible", "Lost",
 ];
 const VALID_QUALITIES: CustomerQuality[] = ["Hot", "Warm", "Cold", "Better", "Poor"];
+const VALID_EMPLOYMENT_TYPES: EmploymentType[] = ["Salaried", "Self Employed", "Business Owner", "Other"];
+const VALID_CAR_TYPES: CarType[] = ["New Car", "Used Car"];
+const VALID_TENURES: LoanTenure[] = ["1 Year", "2 Years", "3 Years", "4 Years", "5 Years", "6 Years", "7 Years"];
+
+/** Matches a raw cell value against a known enum, case-insensitively; returns undefined if no match (never silently trusts an arbitrary string). */
+function matchEnum<T extends string>(raw: unknown, options: readonly T[]): T | undefined {
+  if (!raw) return undefined;
+  const normalized = String(raw).trim().toLowerCase();
+  return options.find((o) => o.toLowerCase() === normalized);
+}
 
 export function validateAndTransformRows(
   rows: Record<string, unknown>[],
@@ -139,12 +149,12 @@ export function validateAndTransformRows(
       mobile: mobileRaw,
       email: mapped.email ? String(mapped.email) : undefined,
       city: mapped.city ? String(mapped.city) : undefined,
-      employmentType: mapped.employmentType as EmploymentType | undefined,
-      carType: mapped.carType as CarType | undefined,
+      employmentType: matchEnum(mapped.employmentType, VALID_EMPLOYMENT_TYPES),
+      carType: matchEnum(mapped.carType, VALID_CAR_TYPES),
       carModel: mapped.carModel ? String(mapped.carModel) : undefined,
       carPrice: carPriceNum,
       loanAmount: loanAmountNum,
-      tenure: mapped.tenure as LoanTenure | undefined,
+      tenure: matchEnum(mapped.tenure, VALID_TENURES),
       status,
       quality,
       assignedTo: mapped.assignedTo ? String(mapped.assignedTo) : undefined,

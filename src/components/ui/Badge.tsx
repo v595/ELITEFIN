@@ -72,3 +72,31 @@ export function qualityVariant(quality: string): BadgeProps["variant"] {
       return "muted";
   }
 }
+
+export function priorityVariant(priority: string): BadgeProps["variant"] {
+  switch (priority) {
+    case "High":
+      return "danger";
+    case "Medium":
+      return "warning";
+    default:
+      return "muted";
+  }
+}
+
+export function callOutcomeVariant(outcome: string): BadgeProps["variant"] {
+  switch (outcome) {
+    case "Connected":
+    case "Interested":
+      return "success";
+    case "Busy":
+      return "warning";
+    case "Call Back Later":
+      return "info";
+    case "Not Interested":
+    case "Wrong Number":
+      return "danger";
+    default:
+      return "muted";
+  }
+}

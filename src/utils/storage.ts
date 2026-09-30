@@ -7,6 +7,8 @@
 
 import type { Lead, CallRecord, FollowUp, CrmSession } from "../types";
 import { demoLeads } from "../data/demoLeads";
+import { demoFollowUps } from "../data/demoFollowUps";
+import { demoReviews, type Review } from "../data/demoReviews";
 
 const KEYS = {
   leads: "elitefin_leads",
@@ -14,6 +16,8 @@ const KEYS = {
   followUps: "elitefin_followups",
   session: "elitefin_crm_session",
   seeded: "elitefin_seeded_v1",
+  userReviews: "elitefin_user_reviews",
+  leadIdCounter: "elitefin_lead_id_counter",
 } as const;
 
 function safeGet<T>(key: string, fallback: T): T {
@@ -40,7 +44,8 @@ export function seedIfEmpty(): void {
   if (!alreadySeeded) {
     safeSet(KEYS.leads, demoLeads);
     safeSet(KEYS.calls, []);
-    safeSet(KEYS.followUps, []);
+    safeSet(KEYS.followUps, demoFollowUps);
+    safeSet(KEYS.leadIdCounter, 1000 + demoLeads.length);
     safeSet(KEYS.seeded, true);
   }
 }
@@ -78,13 +83,18 @@ export function getLeadById(id: string): Lead | undefined {
   return getLeads().find((l) => l.id === id);
 }
 
+/**
+ * Generates the next sequential Lead ID (EF-1001, EF-1002, ...) using a
+ * persistent counter, so every lead — whether created via the public
+ * enquiry forms, the CRM, or an Excel import — shares one numbering
+ * scheme with no collisions, even when several IDs are reserved in a
+ * row before any of them are saved (e.g. a batch Excel import).
+ */
 export function generateLeadId(): string {
-  const leads = getLeads();
-  const max = leads.reduce((acc, l) => {
-    const num = parseInt(l.leadId?.replace(/\D/g, "") || "0", 10);
-    return num > acc ? num : acc;
-  }, 1000);
-  return `EF-${max + 1}`;
+  const current = safeGet<number>(KEYS.leadIdCounter, 1000);
+  const next = current + 1;
+  safeSet(KEYS.leadIdCounter, next);
+  return `EF-${next}`;
 }
 
 // --- Calls --------------------------------------------------------------
@@ -150,4 +160,22 @@ export function clearSession(): void {
 
 export function submitEnquiryAsLead(lead: Lead): void {
   addLead(lead);
+}
+
+// --- Reviews (visitor-submitted, layered on top of the demo set) -----------
+
+/** Visitor-submitted reviews only (not the built-in demo/sample set). */
+export function getUserReviews(): Review[] {
+  return safeGet<Review[]>(KEYS.userReviews, []);
+}
+
+export function addUserReview(review: Review): void {
+  const reviews = getUserReviews();
+  reviews.unshift(review);
+  safeSet(KEYS.userReviews, reviews);
+}
+
+/** All reviews shown on the site: visitor-submitted first, then the demo set. */
+export function getAllReviews(): Review[] {
+  return [...getUserReviews(), ...demoReviews];
 }

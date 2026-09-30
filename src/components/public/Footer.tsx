@@ -37,7 +37,7 @@ export default function Footer() {
               <li><Link to="/loans/new-car" className="hover:text-white">New Car Loan</Link></li>
               <li><Link to="/loans/used-car" className="hover:text-white">Used Car Loan</Link></li>
               <li><Link to="/loans/refinance" className="hover:text-white">Car Refinance</Link></li>
-              <li><Link to="/" className="hover:text-white">EMI Calculator</Link></li>
+              <li><a href="/#emi-calculator" className="hover:text-white">EMI Calculator</a></li>
             </ul>
           </div>
 

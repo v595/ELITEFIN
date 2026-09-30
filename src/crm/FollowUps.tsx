@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CalendarClock, Phone, CheckCircle2, RotateCcw } from "lucide-react";
 import toast from "react-hot-toast";
 import Card from "../components/ui/Card";
-import Badge from "../components/ui/Badge";
+import Badge, { priorityVariant } from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import EmptyState from "../components/ui/EmptyState";
 import { getFollowUps, updateFollowUp } from "../utils/storage";
@@ -32,16 +32,32 @@ export default function FollowUps() {
     setFollowUps(getFollowUps());
   }
 
-  useEffect(refresh, []);
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filtered = useMemo(() => {
-    let result = followUps.filter((f) => f.status !== "Completed" || tab === "Completed" || tab === "All");
-    if (tab === "Today") result = result.filter((f) => classify(f) === "Today" && f.status === "Pending");
-    else if (tab === "Overdue") result = result.filter((f) => classify(f) === "Overdue" && f.status === "Pending");
-    else if (tab === "Upcoming") result = result.filter((f) => classify(f) === "Upcoming" && f.status === "Pending");
-    else if (tab === "Completed") result = result.filter((f) => f.status === "Completed");
+    let result: FollowUp[];
+    switch (tab) {
+      case "Today":
+        result = followUps.filter((f) => classify(f) === "Today" && f.status === "Pending");
+        break;
+      case "Overdue":
+        result = followUps.filter((f) => classify(f) === "Overdue" && f.status === "Pending");
+        break;
+      case "Upcoming":
+        result = followUps.filter((f) => classify(f) === "Upcoming" && f.status === "Pending");
+        break;
+      case "Completed":
+        result = followUps.filter((f) => f.status === "Completed");
+        break;
+      case "All":
+      default:
+        result = followUps;
+    }
 
-    return result.sort((a, b) => new Date(a.date + " " + a.time).getTime() - new Date(b.date + " " + b.time).getTime());
+    return [...result].sort((a, b) => new Date(a.date + " " + a.time).getTime() - new Date(b.date + " " + b.time).getTime());
   }, [followUps, tab]);
 
   function markComplete(id: string) {
@@ -97,12 +113,12 @@ export default function FollowUps() {
                     <p className="text-xs text-muted">{f.reason}</p>
                     <p className="text-xs text-muted mt-0.5">
                       {new Date(f.date).toLocaleDateString("en-IN")} at {f.time} ·{" "}
-                      <Badge variant={f.priority === "High" ? "danger" : f.priority === "Medium" ? "warning" : "muted"}>{f.priority}</Badge>
+                      <Badge variant={priorityVariant(f.priority)}>{f.priority}</Badge>
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-2 shrink-0">
-                  <a href={`tel:${f.phone}`}><Button variant="outline" size="sm" icon={<Phone size={14} />}>Call</Button></a>
+                  <Button href={`tel:${f.phone}`} variant="outline" size="sm" icon={<Phone size={14} />}>Call</Button>
                   {f.status === "Pending" && (
                     <>
                       <Button variant="secondary" size="sm" icon={<CheckCircle2 size={14} />} onClick={() => markComplete(f.id)}>Complete</Button>

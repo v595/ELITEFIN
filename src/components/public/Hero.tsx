@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { ArrowRight, MessageCircle, ShieldCheck, Sparkles } from "lucide-react";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
@@ -55,19 +54,20 @@ export default function Hero() {
             Explore car loan options with personalized assistance from application to lender coordination.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Button variant="gold" size="lg" icon={<ArrowRight size={18} />} iconPosition="right">
-              <a href="#enquiry-form">Check Loan Options</a>
+            <Button href="#enquiry" variant="gold" size="lg" icon={<ArrowRight size={18} />} iconPosition="right">
+              Check Loan Options
             </Button>
-            <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
-              <Button
-                variant="outline"
-                size="lg"
-                icon={<MessageCircle size={18} />}
-                className="!border-white/30 !text-white hover:!bg-white hover:!text-primary"
-              >
-                WhatsApp Us
-              </Button>
-            </a>
+            <Button
+              href={getWhatsAppLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outline"
+              size="lg"
+              icon={<MessageCircle size={18} />}
+              className="!border-white/30 !text-white hover:!bg-white hover:!text-primary"
+            >
+              WhatsApp Us
+            </Button>
           </div>
           <div className="mt-10 flex items-center gap-3 text-white/60 text-sm">
             <ShieldCheck size={18} className="text-gold-light" />
@@ -136,9 +136,6 @@ export default function Hero() {
         </div>
       </div>
       <div className="hidden lg:block h-14" />
-      <Link to="/contact" className="sr-only">
-        Contact EliteFin
-      </Link>
     </section>
   );
 }

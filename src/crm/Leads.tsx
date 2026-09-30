@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Search, Filter, Download, Plus, ChevronDown, Users, Phone, MessageCircle, Eye,
+  Search, Filter, Download, Plus, ChevronDown, Users, Phone, MessageCircle, Eye, Trash2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Card from "../components/ui/Card";
 import Badge, { statusVariant, qualityVariant } from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import EmptyState from "../components/ui/EmptyState";
-import { getLeads } from "../utils/storage";
+import { getLeads, deleteLead } from "../utils/storage";
 import { exportLeadsToExcel } from "../utils/excel";
 import { formatCurrency } from "../utils/calculations";
 import { getWhatsAppLink } from "../utils/whatsapp";
@@ -72,6 +72,13 @@ export default function Leads() {
     toast.success("Excel exported successfully.");
   }
 
+  function handleDelete(lead: Lead) {
+    if (!window.confirm(`Delete lead "${lead.name}" (${lead.leadId})? This cannot be undone.`)) return;
+    deleteLead(lead.id);
+    setLeads(getLeads());
+    toast.success("Lead deleted.");
+  }
+
   return (
     <div className="p-5 lg:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -83,8 +90,8 @@ export default function Leads() {
           <Button variant="outline" size="sm" icon={<Download size={15} />} onClick={handleExport}>
             Export Excel
           </Button>
-          <Button variant="primary" size="sm" icon={<Plus size={15} />}>
-            <Link to="/crm/import">Import Leads</Link>
+          <Button to="/crm/import" variant="primary" size="sm" icon={<Plus size={15} />}>
+            Import Leads
           </Button>
         </div>
       </div>
@@ -143,7 +150,7 @@ export default function Leads() {
             icon={<Users size={28} />}
             title="No leads found"
             description="Try adjusting your search or filters, or import leads from Excel."
-            action={<Button variant="primary" size="sm"><Link to="/crm/import">Import Leads</Link></Button>}
+            action={<Button to="/crm/import" variant="primary" size="sm">Import Leads</Button>}
           />
         ) : (
           <div className="overflow-x-auto thin-scrollbar">
@@ -190,6 +197,13 @@ export default function Leads() {
                         <Link to={`/crm/leads/${l.id}`} className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center" aria-label="View">
                           <Eye size={14} />
                         </Link>
+                        <button
+                          onClick={() => handleDelete(l)}
+                          className="w-8 h-8 rounded-lg bg-danger/10 text-danger flex items-center justify-center"
+                          aria-label="Delete lead"
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     </td>
                   </tr>

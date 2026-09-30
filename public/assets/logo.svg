@@ -1,16 +1,13 @@
-<svg width="220" height="56" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="220" height="52" viewBox="0 0 220 52" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g>
-    <!-- Icon mark: car silhouette merged with forward finance arrow -->
-    <rect x="0" y="8" width="48" height="40" rx="12" fill="#0B1F3A"/>
-    <path d="M10 33.5c0-1.4.9-2.6 2.2-3l2.3-.7 2.6-5.4c.8-1.7 2.5-2.8 4.4-2.8h6.6c1.7 0 3.3.9 4.2 2.4l3.1 5.1 2.6.9c1.2.4 2 1.6 2 2.9v3.1c0 .8-.6 1.4-1.4 1.4h-1.9a3.6 3.6 0 0 1-7.1 0h-8.6a3.6 3.6 0 0 1-7.1 0H11.4c-.8 0-1.4-.6-1.4-1.4v-2.5Z" fill="#F2C76E"/>
-    <circle cx="18.5" cy="36.5" r="2.1" fill="#0B1F3A"/>
-    <circle cx="30.5" cy="36.5" r="2.1" fill="#0B1F3A"/>
-    <path d="M25 14.5 32 21.5H29L34 27H24l3-5.5-3-5V14.5Z" fill="#D9A441" opacity="0.001"/>
-    <!-- forward arrow accent -->
-    <path d="M35 12 L42 12 L42 19" stroke="#D9A441" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M42 12 L31 23" stroke="#D9A441" stroke-width="2.6" stroke-linecap="round"/>
+    <!-- Icon mark: car silhouette + forward finance arrow, no background shape -->
+    <path d="M4 33.5c0-1.4.9-2.6 2.2-3l2.3-.7 2.6-5.4c.8-1.7 2.5-2.8 4.4-2.8h6.6c1.7 0 3.3.9 4.2 2.4l3.1 5.1 2.6.9c1.2.4 2 1.6 2 2.9v3.1c0 .8-.6 1.4-1.4 1.4h-1.9a3.6 3.6 0 0 1-7.1 0h-8.6a3.6 3.6 0 0 1-7.1 0H5.4c-.8 0-1.4-.6-1.4-1.4v-2.5Z" fill="#0B1F3A"/>
+    <circle cx="12.5" cy="36.5" r="2.1" fill="#F5F7FA"/>
+    <circle cx="24.5" cy="36.5" r="2.1" fill="#F5F7FA"/>
+    <path d="M29 8 L37 8 L37 16" stroke="#D9A441" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M37 8 L25 20" stroke="#D9A441" stroke-width="2.8" stroke-linecap="round"/>
   </g>
-  <text x="58" y="36" font-family="'Segoe UI', Arial, sans-serif" font-size="24" font-weight="700">
+  <text x="46" y="34" font-family="'Segoe UI', Arial, sans-serif" font-size="24" font-weight="700">
     <tspan fill="#0B1F3A">Elite</tspan><tspan fill="#D9A441">Fin</tspan>
   </text>
 </svg>

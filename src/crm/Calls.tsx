@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { PhoneCall } from "lucide-react";
 import Card from "../components/ui/Card";
-import Badge from "../components/ui/Badge";
+import Badge, { callOutcomeVariant } from "../components/ui/Badge";
 import EmptyState from "../components/ui/EmptyState";
 import { getCalls } from "../utils/storage";
 import { formatDuration } from "../utils/calculations";
@@ -30,16 +30,6 @@ function inRange(dateStr: string, filter: DateFilter): boolean {
   }
   return true;
 }
-
-const outcomeVariant: Record<string, "success" | "danger" | "warning" | "info" | "muted"> = {
-  Connected: "success",
-  Interested: "success",
-  "No Answer": "muted",
-  Busy: "warning",
-  "Call Back Later": "info",
-  "Not Interested": "danger",
-  "Wrong Number": "danger",
-};
 
 export default function Calls() {
   const [calls, setCalls] = useState<CallRecord[]>([]);
@@ -96,7 +86,7 @@ export default function Calls() {
                     <td className="px-4 py-3 text-muted">{c.phone}</td>
                     <td className="px-4 py-3 text-muted">{c.agent}</td>
                     <td className="px-4 py-3 font-mono text-ink">{formatDuration(c.durationSeconds)}</td>
-                    <td className="px-4 py-3"><Badge variant={outcomeVariant[c.outcome] || "muted"}>{c.outcome}</Badge></td>
+                    <td className="px-4 py-3"><Badge variant={callOutcomeVariant(c.outcome)}>{c.outcome}</Badge></td>
                     <td className="px-4 py-3 text-muted max-w-xs truncate">{c.notes || "—"}</td>
                   </tr>
                 ))}

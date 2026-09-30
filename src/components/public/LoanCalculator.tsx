@@ -11,7 +11,7 @@ export default function LoanCalculator() {
   const result = useMemo(() => calculateEmi(amount, rate, tenureYears * 12), [amount, rate, tenureYears]);
 
   return (
-    <section className="py-20 bg-white">
+    <section id="emi-calculator" className="py-20 bg-white scroll-mt-20">
       <div className="container-x">
         <div className="max-w-2xl mx-auto text-center mb-12">
           <span className="inline-block text-xs font-bold tracking-widest text-gold uppercase mb-3">

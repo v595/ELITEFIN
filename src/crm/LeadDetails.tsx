@@ -3,10 +3,10 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   ArrowLeft, Phone, MessageCircle, StickyNote, CalendarPlus, RefreshCcw,
-  PhoneCall, PhoneOff, Clock, User, Car, Mail, MapPin, Briefcase,
+  PhoneCall, PhoneOff, Clock, User, Car, Mail, MapPin, Briefcase, X,
 } from "lucide-react";
 import Card from "../components/ui/Card";
-import Badge, { statusVariant, qualityVariant } from "../components/ui/Badge";
+import Badge, { statusVariant, qualityVariant, priorityVariant } from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import { getLeadById, updateLead, getCalls, saveCall, saveFollowUp, getFollowUps } from "../utils/storage";
 import { getWhatsAppLink } from "../utils/whatsapp";
@@ -58,6 +58,17 @@ export default function LeadDetails() {
     const interval = setInterval(() => setCallSeconds((s) => s + 1), 1000);
     return () => clearInterval(interval);
   }, [callActive]);
+
+  // Warn before closing/refreshing the tab with an active call or an
+  // unsaved call-outcome form, so the agent doesn't silently lose it.
+  useEffect(() => {
+    if (!callActive && !showOutcomeModal) return;
+    function onBeforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+    }
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [callActive, showOutcomeModal]);
 
   if (!lead) {
     return (
@@ -150,6 +161,14 @@ export default function LeadDetails() {
     refresh();
   }
 
+  function handleDiscardCallOutcome() {
+    setShowOutcomeModal(false);
+    setCallSeconds(0);
+    setCallNotes("");
+    setCallOutcome("Connected");
+    toast("Call was not saved.", { icon: "⚠️" });
+  }
+
   return (
     <div className="p-5 lg:p-8 max-w-6xl">
       <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-muted text-sm font-semibold mb-5 hover:text-ink">
@@ -173,9 +192,16 @@ export default function LeadDetails() {
               End Call — {formatDuration(callSeconds)}
             </Button>
           )}
-          <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm" icon={<MessageCircle size={15} />}>WhatsApp</Button>
-          </a>
+          <Button
+            href={getWhatsAppLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            size="sm"
+            icon={<MessageCircle size={15} />}
+          >
+            WhatsApp
+          </Button>
           <Button variant="outline" size="sm" icon={<CalendarPlus size={15} />} onClick={() => setShowFollowUpModal(true)}>
             Schedule Follow-Up
           </Button>
@@ -259,7 +285,7 @@ export default function LeadDetails() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-semibold text-ink text-sm">{new Date(f.date).toLocaleDateString("en-IN")} at {f.time}</span>
-                        <Badge variant={f.priority === "High" ? "danger" : f.priority === "Medium" ? "warning" : "muted"}>{f.priority}</Badge>
+                        <Badge variant={priorityVariant(f.priority)}>{f.priority}</Badge>
                         <Badge variant={f.status === "Completed" ? "success" : f.status === "Missed" ? "danger" : "info"}>{f.status}</Badge>
                       </div>
                       <p className="text-sm text-ink mt-1">{f.reason}</p>
@@ -370,7 +396,7 @@ export default function LeadDetails() {
 
       {/* Call Outcome Modal */}
       {showOutcomeModal && (
-        <Modal onClose={handleSaveCallOutcome} title="Call Outcome">
+        <Modal onClose={handleDiscardCallOutcome} title="Call Outcome">
           <div className="space-y-4">
             <p className="text-sm text-muted">Call duration: <span className="font-mono font-bold text-ink">{formatDuration(callSeconds)}</span></p>
             <div>
@@ -404,10 +430,33 @@ function InfoRow({ icon: Icon, label, value }: { icon: React.ComponentType<{ siz
 }
 
 function Modal({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-lift w-full max-w-md p-6 animate-slide-up" onClick={(e) => e.stopPropagation()}>
-        <h3 className="font-bold text-lg text-primary mb-4">{title}</h3>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+      onClick={onClose}
+      role="presentation"
+    >
+      <div
+        className="bg-white rounded-2xl shadow-lift w-full max-w-md p-6 animate-slide-up"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="crm-modal-title"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 id="crm-modal-title" className="font-bold text-lg text-primary">{title}</h3>
+          <button onClick={onClose} className="text-muted hover:text-ink p-1" aria-label="Close">
+            <X size={18} />
+          </button>
+        </div>
         {children}
       </div>
     </div>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { PhoneCall, CheckCircle2, RotateCcw, Flame } from "lucide-react";
 import Card from "../components/ui/Card";
-import Badge, { qualityVariant } from "../components/ui/Badge";
+import Badge, { qualityVariant, priorityVariant } from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import EmptyState from "../components/ui/EmptyState";
 import { getLeads, getFollowUps, updateFollowUp } from "../utils/storage";
@@ -45,7 +45,10 @@ export default function NextCalls() {
     setItems(combined);
   }
 
-  useEffect(refresh, []);
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function markComplete(id: string) {
     updateFollowUp(id, { status: "Completed" });
@@ -99,12 +102,12 @@ export default function NextCalls() {
                     <td className="px-4 py-3 text-muted">{l?.loanAmount ? formatCurrency(l.loanAmount) : "—"}</td>
                     <td className="px-4 py-3 text-muted">{l?.lastCall ? new Date(l.lastCall).toLocaleDateString("en-IN") : "—"}</td>
                     <td className="px-4 py-3 text-ink font-semibold">{new Date(f.date).toLocaleDateString("en-IN")} {f.time}</td>
-                    <td className="px-4 py-3"><Badge variant={f.priority === "High" ? "danger" : f.priority === "Medium" ? "warning" : "muted"}>{f.priority}</Badge></td>
+                    <td className="px-4 py-3"><Badge variant={priorityVariant(f.priority)}>{f.priority}</Badge></td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1.5">
-                        <a href={`tel:${f.phone}`}>
-                          <Button variant="primary" size="sm" icon={<PhoneCall size={13} />}>Call Now</Button>
-                        </a>
+                        <Button href={`tel:${f.phone}`} variant="primary" size="sm" icon={<PhoneCall size={13} />}>
+                          Call Now
+                        </Button>
                         <Button variant="outline" size="sm" icon={<CheckCircle2 size={13} />} onClick={() => markComplete(f.id)} />
                         <Button variant="outline" size="sm" icon={<RotateCcw size={13} />} onClick={() => reschedule(f.id)} />
                       </div>

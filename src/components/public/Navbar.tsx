@@ -60,8 +60,8 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden lg:block">
-          <Button variant="gold" size="sm" icon={<PhoneCall size={16} />}>
-            <Link to="/contact">Get a Callback</Link>
+          <Button to="/contact" variant="gold" size="sm" icon={<PhoneCall size={16} />}>
+            Get a Callback
           </Button>
         </div>
 
@@ -94,8 +94,8 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-          <Button variant="gold" size="md" fullWidth className="mt-3" icon={<PhoneCall size={16} />}>
-            <Link to="/contact">Get a Callback</Link>
+          <Button to="/contact" variant="gold" size="md" fullWidth className="mt-3" icon={<PhoneCall size={16} />}>
+            Get a Callback
           </Button>
         </div>
       )}

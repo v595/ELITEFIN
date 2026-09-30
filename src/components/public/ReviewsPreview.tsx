@@ -1,11 +1,16 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
-import { demoReviews } from "../../data/demoReviews";
+import { getAllReviews } from "../../utils/storage";
+import type { Review } from "../../data/demoReviews";
 
 export default function ReviewsPreview() {
-  const featured = demoReviews.slice(0, 3);
+  const [featured, setFeatured] = useState<Review[]>([]);
+
+  useEffect(() => {
+    setFeatured(getAllReviews().slice(0, 3));
+  }, []);
 
   return (
     <section className="py-20 bg-white">
@@ -38,8 +43,8 @@ export default function ReviewsPreview() {
         </div>
 
         <div className="text-center mt-10">
-          <Button variant="outline">
-            <Link to="/reviews">View All Reviews</Link>
+          <Button to="/reviews" variant="outline">
+            View All Reviews
           </Button>
         </div>
       </div>

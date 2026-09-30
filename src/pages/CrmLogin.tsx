@@ -20,8 +20,9 @@ export default function CrmLogin() {
 
     setTimeout(() => {
       const { email: demoEmail, password: demoPassword } = siteConfig.crmDemoCredentials;
-      if (email.trim().toLowerCase() === demoEmail.toLowerCase() && password === demoPassword) {
-        setSession({ email, name: "Admin", loggedInAt: new Date().toISOString() });
+      const normalizedEmail = email.trim().toLowerCase();
+      if (normalizedEmail === demoEmail.toLowerCase() && password === demoPassword) {
+        setSession({ email: normalizedEmail, name: "Admin", loggedInAt: new Date().toISOString() });
         toast.success("Welcome back!");
         navigate("/crm/dashboard");
       } else {
@@ -54,7 +55,7 @@ export default function CrmLogin() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full rounded-xl border border-slate-200 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-blue"
-                  placeholder="admin@elitefin.demo"
+                  placeholder={siteConfig.crmDemoCredentials.email}
                   required
                 />
               </div>

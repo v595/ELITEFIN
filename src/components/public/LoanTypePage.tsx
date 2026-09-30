@@ -24,8 +24,8 @@ export default function LoanTypePage({ icon: Icon, eyebrow, title, description, 
             </span>
             <h1 className="text-4xl font-extrabold leading-tight">{title}</h1>
             <p className="mt-4 text-white/65 leading-relaxed max-w-lg">{description}</p>
-            <Button variant="gold" size="lg" className="mt-7">
-              <a href="#enquiry">Check Loan Options</a>
+            <Button href="#enquiry" variant="gold" size="lg" className="mt-7">
+              Check Loan Options
             </Button>
           </div>
           <div className="rounded-3xl overflow-hidden shadow-lift">

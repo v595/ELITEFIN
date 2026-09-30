@@ -27,8 +27,8 @@ export default function EligibilitySection() {
             Car loan eligibility depends on several factors assessed by the lender. Here's what is generally
             considered:
           </p>
-          <Button variant="gold" size="lg" className="mt-8">
-            <a href="#enquiry-form">Check My Options</a>
+          <Button href="#enquiry" variant="gold" size="lg" className="mt-8">
+            Check My Options
           </Button>
         </div>
 
